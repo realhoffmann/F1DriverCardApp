@@ -7,9 +7,25 @@ class HomeViewModel: ObservableObject {
     @Published var qualifyingPosition: String = ""
     @Published var championships: Int = 0
     
+    var driverImage: String {
+        if let lastName = driver?.familyName {
+            return lastName.lowercased()
+        } else {
+            return "f1Logo"
+        }
+    }
+    
+    var helemtImage: String {
+        if let lastName = driver?.familyName {
+            return lastName.lowercased() + "Helmet"
+        } else {
+            return "f1Logo"
+        }
+    }
+    
     func fetchDriverData() async {
         // Retrieve the favorite driverId; default to "max_verstappen"
-        var storedId = UserDefaults.standard.string(forKey: "favoriteDriverId") ?? "hamilton"
+        var storedId = UserDefaults.standard.string(forKey: "favoriteDriverId") ?? "alonso"
         // If the stored id (case-insensitive) is "verstappen", use "max_verstappen"
         if storedId.lowercased() == "verstappen" {
             storedId = "max_verstappen"

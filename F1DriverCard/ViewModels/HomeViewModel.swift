@@ -25,7 +25,7 @@ class HomeViewModel: ObservableObject {
     
     func fetchDriverData() async {
         // Retrieve the favorite driverId; default to "max_verstappen"
-        var storedId = UserDefaults.standard.string(forKey: "favoriteDriverId") ?? "alonso"
+        var storedId = UserDefaults.standard.string(forKey: "favoriteDriverId") ?? "verstappen"
         // If the stored id (case-insensitive) is "verstappen", use "max_verstappen"
         if storedId.lowercased() == "verstappen" {
             storedId = "max_verstappen"

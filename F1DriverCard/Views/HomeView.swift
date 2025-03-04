@@ -66,7 +66,7 @@ struct HomeView: View {
                     if let driverId = viewModel.driver?.driverId,
                        let driverResult = raceResultViewModel.resultForDriver(driverId) {
                         Text("\(raceResultViewModel.race?.raceName ?? "Unknown")")
-                            .font(.f1Bold(18))
+                            .font(.f1Bold(20))
                             .foregroundColor(.white)
                         Divider()
                             .frame(height: 1)
@@ -121,10 +121,6 @@ struct HomeView: View {
                     .foregroundStyle(.gray)
             }
             Spacer()
-//            Image(.redBullRacingCar)
-//                .resizable()
-//                .scaledToFit()
-//                .frame(height: 100)
         }
         .padding(.horizontal)
         .background(
@@ -152,6 +148,10 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
+//Image(.redBullRacingCar)
+//    .resizable()
+//    .scaledToFit()
+//    .frame(height: 100)
 //
 //Image(systemName: "chevron.down")
 //    .resizable()

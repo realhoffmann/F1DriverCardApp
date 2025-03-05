@@ -4,7 +4,8 @@ class DriverStandingsViewModel: ObservableObject {
     @Published var championshipPosition: String = "N/A"
     
     func fetchDriverStandings(for driverId: String) async {
-        let urlString = "https://ergast.com/api/f1/current/last/driverStandings.json"
+        // TODO: change to current
+        let urlString = "https://api.jolpi.ca/ergast/f1/2024/last/driverStandings.json"
         
         do {
             let response: DriverStandingsResponse = try await F1ApiClient.shared.fetchData(from: urlString)

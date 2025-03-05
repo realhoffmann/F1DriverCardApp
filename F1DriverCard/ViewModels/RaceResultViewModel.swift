@@ -4,7 +4,8 @@ class RaceResultViewModel: ObservableObject {
     @Published var race: Race?
     
     func fetchRaceResult() async {
-        let urlString = "https://ergast.com/api/f1/current/last/results.json"
+        // TODO: change 2024 to current once season starts
+        let urlString = "https://api.jolpi.ca/ergast/f1/2024/last/results.json"
         do {
             let response: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             if let fetchedRace = response.MRData.RaceTable.Races.first {

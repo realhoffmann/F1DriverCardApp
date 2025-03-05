@@ -40,7 +40,7 @@ class HomeViewModel: ObservableObject {
         }
         
         // Build the URL using HTTPS and the current season path.
-        let urlString = "https://ergast.com/api/f1/current/drivers/\(storedId).json"
+        let urlString = "https://api.jolpi.ca/ergast/f1/current/drivers/\(storedId).json"
         
         do {
             let response: DriverResponse = try await F1ApiClient.shared.fetchData(from: urlString)
@@ -60,7 +60,8 @@ class HomeViewModel: ObservableObject {
     
     // Fetch the qualifying result for the given driver from the current round last qualifying endpoint.
     private func fetchQualifyingResult(for driverId: String) async {
-        let urlString = "https://ergast.com/api/f1/current/last/qualifying.json"
+        // TODO: change 2024 to current once season starts
+        let urlString = "https://api.jolpi.ca/ergast/f1/2024/last/qualifying.json"
         do {
             let response: QualifyingResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             if let race = response.MRData.RaceTable.Races.first {

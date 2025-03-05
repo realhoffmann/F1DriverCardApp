@@ -4,7 +4,7 @@ class DriversListViewModel: ObservableObject {
     @Published var drivers: [Driver] = []
     
     func fetchDrivers() async {
-        let urlString = "https://ergast.com/api/f1/current/drivers.json"
+        let urlString = "https://api.jolpi.ca/ergast/f1/current/drivers.json"
         do {
             let response: DriverResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             DispatchQueue.main.async {

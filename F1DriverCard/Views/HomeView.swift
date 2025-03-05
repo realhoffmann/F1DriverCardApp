@@ -11,16 +11,8 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                ForEach(0..<viewModel.championships, id: \.self) { _ in
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 16))
-                }
-                Spacer()
-            }
-            HStack {
                 // Flag
-                Image(.netherlandsFlag)
+                Image(viewModel.flagImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 30)
@@ -54,7 +46,7 @@ struct HomeView: View {
                 Image(viewModel.helemtImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 130)
+                    .frame(height: 150)
                     .padding(.leading, -30)
                 Spacer()
             }
@@ -112,7 +104,7 @@ struct HomeView: View {
                 Image(systemName: "chevron.left")
                     .foregroundStyle(.gray)
                 Spacer()
-                Image(.australia)
+                Image(.australiaTrack)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)

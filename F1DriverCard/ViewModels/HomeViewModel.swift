@@ -23,6 +23,14 @@ class HomeViewModel: ObservableObject {
         }
     }
     
+    var flagImage: String {
+        if let nationality = driver?.nationality {
+            return nationality.lowercased()
+        } else {
+            return "british"
+        }
+    }
+    
     func fetchDriverData() async {
         // Retrieve the favorite driverId; default to "max_verstappen"
         var storedId = UserDefaults.standard.string(forKey: "favoriteDriverId") ?? "verstappen"
@@ -40,11 +48,6 @@ class HomeViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.driver = fetchedDriver
                 }
-                // Fetch championships from the driver's Wikipedia page via the driver's URL
-                let champs = await fetchChampionships(from: fetchedDriver.url)
-                DispatchQueue.main.async {
-                    self.championships = champs
-                }
                 // Fetch the latest qualifying result for this driver from round last of the current season
                 await fetchQualifyingResult(for: fetchedDriver.driverId)
             } else {
@@ -53,29 +56,6 @@ class HomeViewModel: ObservableObject {
         } catch {
             print("Error fetching driver data: \(error)")
         }
-    }
-    
-    // Extract championships count from the driver's Wikipedia page.
-    private func fetchChampionships(from urlString: String) async -> Int {
-        guard let url = URL(string: urlString) else { return 0 }
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            guard let htmlString = String(data: data, encoding: .utf8) else { return 0 }
-            
-            // Regex: Look for the <tr> element containing a header with "Championships" and capture the digits in the adjacent <td>
-            let pattern = "<tr>.*?<th[^>]*>\\s*<a[^>]*>Championships</a>\\s*</th>\\s*<td[^>]*>(\\d+)"
-            let regex = try NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators, .caseInsensitive])
-            let nsrange = NSRange(htmlString.startIndex..<htmlString.endIndex, in: htmlString)
-            
-            if let match = regex.firstMatch(in: htmlString, range: nsrange),
-               let range = Range(match.range(at: 1), in: htmlString) {
-                let championshipStr = String(htmlString[range])
-                return Int(championshipStr) ?? 0
-            }
-        } catch {
-            print("Error fetching championships from Wikipedia: \(error)")
-        }
-        return 0
     }
     
     // Fetch the qualifying result for the given driver from the current round last qualifying endpoint.

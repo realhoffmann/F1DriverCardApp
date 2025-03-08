@@ -6,6 +6,7 @@ struct HomeView: View {
     @StateObject var driverStandingsViewModel = DriverStandingsViewModel()
     @StateObject var qualifyingViewModel = QualifyingViewModel()
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
+    @State private var dragOffset: CGFloat = 0
     
     var body: some View {
         VStack(spacing: 16) {
@@ -99,14 +100,82 @@ struct HomeView: View {
             HStack {
                 Image(systemName: "chevron.left")
                     .foregroundStyle(.gray)
+                    .onTapGesture {
+                        Task {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                dragOffset = 500
+                            }
+                            // 300_000_000nanoSec = 0.3sec
+                            try? await Task.sleep(nanoseconds: 300_000_000)
+                            await raceResultViewModel.fetchPreviousRaceResult()
+                            dragOffset = -500
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                dragOffset = 0
+                            }
+                        }
+                    }
                 Spacer()
                 Image(raceResultViewModel.trackImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)
+                    .offset(x: dragOffset)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                dragOffset = gesture.translation.width
+                            }
+                            .onEnded { gesture in
+                                let threshold: CGFloat = 50
+                                if gesture.translation.width > threshold {
+                                    // Swipe right: previous race
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        dragOffset = 500
+                                    }
+                                    Task {
+                                        try? await Task.sleep(nanoseconds: 300_000_000)
+                                        await raceResultViewModel.fetchPreviousRaceResult()
+                                        dragOffset = -500
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            dragOffset = 0
+                                        }
+                                    }
+                                } else if gesture.translation.width < -threshold {
+                                    // Swipe left: next race
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        dragOffset = -500
+                                    }
+                                    Task {
+                                        try? await Task.sleep(nanoseconds: 300_000_000)
+                                        await raceResultViewModel.fetchNextRaceResult()
+                                        dragOffset = 500
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            dragOffset = 0
+                                        }
+                                    }
+                                } else {
+                                    withAnimation {
+                                        dragOffset = 0
+                                    }
+                                }
+                            }
+                    )
                 Spacer()
                 Image(systemName: "chevron.right")
                     .foregroundStyle(.gray)
+                    .onTapGesture {
+                        Task {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                dragOffset = -500
+                            }
+                            try? await Task.sleep(nanoseconds: 300_000_000)
+                            await raceResultViewModel.fetchNextRaceResult()
+                            dragOffset = 500
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                dragOffset = 0
+                            }
+                        }
+                    }
             }
             Spacer()
         }

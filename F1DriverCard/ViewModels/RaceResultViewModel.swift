@@ -13,10 +13,35 @@ class RaceResultViewModel: ObservableObject {
         do {
             let response: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             if let fetchedRace = response.mrData.raceTable.races.first {
+                print("Fetched race: \(fetchedRace.raceName)")
+                print("Circuit ID: \(fetchedRace.circuit.circuitId)")
                 self.race = fetchedRace
             }
         } catch {
             print("Error fetching race result: \(error)")
+        }
+    }
+    
+    // Fetches the previous race result by decrementing the current round number.
+    func fetchPreviousRaceResult(season: String = "2024") async {
+        if let currentRace = race,
+           let currentRoundInt = Int(currentRace.round),
+           currentRoundInt > 1 {
+            let previousRound = String(currentRoundInt - 1)
+            await fetchRaceResult(season: season, round: previousRound)
+        } else {
+            print("Cannot load previous race: current race is not set or round is invalid")
+        }
+    }
+    
+    // Fetches the next race result by incrementing the current round number.
+    func fetchNextRaceResult(season: String = "2024") async {
+        if let currentRace = race,
+           let currentRoundInt = Int(currentRace.round) {
+            let nextRound = String(currentRoundInt + 1)
+            await fetchRaceResult(season: season, round: nextRound)
+        } else {
+            print("Cannot load next race: current race is not set or round is invalid")
         }
     }
     

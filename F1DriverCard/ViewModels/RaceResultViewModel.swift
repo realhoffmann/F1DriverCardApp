@@ -1,25 +1,19 @@
 import Foundation
 
+@MainActor
 class RaceResultViewModel: ObservableObject {
     @Published var race: Race?
     
     var trackImage: String {
-        if let nationality = race?.Circuit.circuitId {
-            return nationality.lowercased() + "_track"
-        } else {
-            return "yas_marina"
-        }
+        (race?.circuit.circuitId.lowercased() ?? "yas_marina") + "_track"
     }
     
-    func fetchRaceResult() async {
-        // TODO: change 2024 to current once season starts
-        let urlString = "https://api.jolpi.ca/ergast/f1/2024/last/results.json"
+    func fetchRaceResult(season: String = "2024", round: String = "last") async {
+        let urlString = APIEndpoints.raceResults(season: season, round: round)
         do {
             let response: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: urlString)
-            if let fetchedRace = response.MRData.RaceTable.Races.first {
-                DispatchQueue.main.async {
-                    self.race = fetchedRace
-                }
+            if let fetchedRace = response.mrData.raceTable.races.first {
+                self.race = fetchedRace
             }
         } catch {
             print("Error fetching race result: \(error)")
@@ -28,18 +22,16 @@ class RaceResultViewModel: ObservableObject {
     
     // Returns the result for the given driver ID if available.
     func resultForDriver(_ driverId: String) -> Result? {
-        guard let race else {
+        guard let race = race else {
             print("Race data is not available yet")
             return nil
         }
-        
-        let lowercasedDriverId = driverId.lowercased()
-        if let result = race.Results.first(where: { $0.Driver.driverId.lowercased() == lowercasedDriverId }) {
-            print("Found result for driver: \(result.Driver.fullName), Position: \(result.position)")
+        if let result = race.results.first(where: { $0.driver.driverId.lowercased() == driverId.lowercased() }) {
+            print("Found result for driver: \(result.driver.fullName), Position: \(result.position)")
             return result
         } else {
             print("No race result found for driverId: \(driverId)")
-            print("Available drivers: \(race.Results.map { $0.Driver.driverId })")
+            print("Available drivers: \(race.results.map { $0.driver.driverId })")
             return nil
         }
     }

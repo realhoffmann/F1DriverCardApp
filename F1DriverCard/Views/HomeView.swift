@@ -5,27 +5,22 @@ struct HomeView: View {
     @StateObject var raceResultViewModel = RaceResultViewModel()
     @StateObject var driverStandingsViewModel = DriverStandingsViewModel()
     @StateObject var qualifyingViewModel = QualifyingViewModel()
-    @AppStorage("favoriteDriverId")
-    var favoriteDriverId: String = "max_verstappen"
-    @State private var showSettings = false
+    @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
     
     var body: some View {
         VStack(spacing: 16) {
+            // Top Bar: Flag and permanent number
             HStack {
-                // Flag
                 Image(viewModel.flagImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 30)
                 Spacer()
-                // Championship Stars
-                HStack {
-                    Text(viewModel.driver?.permanentNumber ?? "")
-                        .font(.f1Bold(30))
-                        .foregroundColor(.gray)
-                }
+                Text(viewModel.driver?.permanentNumber ?? "")
+                    .font(.f1Bold(30))
+                    .foregroundColor(.gray)
             }
-
+            
             // Driver Name
             HStack {
                 Text(viewModel.driver?.givenName ?? "Loading...")
@@ -44,7 +39,7 @@ struct HomeView: View {
             
             // Helmet Image
             HStack {
-                Image(viewModel.helemtImage)
+                Image(viewModel.helmetImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)
@@ -53,12 +48,12 @@ struct HomeView: View {
             }
             Spacer()
             
-            // Last Race Results
+            // Race Results
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
                     if let driverId = viewModel.driver?.driverId,
                        let driverResult = raceResultViewModel.resultForDriver(driverId) {
-                        Text("\(raceResultViewModel.race?.raceName ?? "Unknown")")
+                        Text(raceResultViewModel.race?.raceName ?? "Unknown")
                             .font(.f1Bold(20))
                             .foregroundColor(.white)
                         Divider()

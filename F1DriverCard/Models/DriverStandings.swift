@@ -1,23 +1,43 @@
-import Foundation
-
+// MARK: - Standings Models
 struct DriverStandingsResponse: Decodable {
-    let MRData: StandingsMRData
+    let mrData: StandingsMRData
+    
+    private enum CodingKeys: String, CodingKey {
+        case mrData = "MRData"
+    }
 }
 
 struct StandingsMRData: Decodable {
-    let StandingsTable: StandingsTable
+    let standingsTable: StandingsTable
+    
+    private enum CodingKeys: String, CodingKey {
+        case standingsTable = "StandingsTable"
+    }
 }
 
 struct StandingsTable: Decodable {
-    let StandingsLists: [StandingsList]
+    let standingsLists: [StandingsList]
+    
+    private enum CodingKeys: String, CodingKey {
+        case standingsLists = "StandingsLists"
+    }
 }
 
 struct StandingsList: Decodable {
-    let DriverStandings: [DriverStanding]
+    let driverStandings: [DriverStanding]
+    
+    private enum CodingKeys: String, CodingKey {
+        case driverStandings = "DriverStandings"
+    }
 }
 
 struct DriverStanding: Decodable {
     let position: String
     let points: String
-    let Driver: Driver
+    let driver: Driver
+    
+    private enum CodingKeys: String, CodingKey {
+        case position, points
+        case driver = "Driver"
+    }
 }

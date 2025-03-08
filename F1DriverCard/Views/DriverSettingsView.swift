@@ -2,24 +2,21 @@ import SwiftUI
 
 struct DriverSettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @AppStorage("favoriteDriverId")
-    var favoriteDriverId: String = "max_verstappen"
+    @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
     @StateObject var viewModel = DriversListViewModel()
     
     var body: some View {
-        VStack {
-            List(viewModel.drivers) { driver in
-                HStack {
-                    Text(driver.fullName)
-                    Spacer()
-                    if driver.driverId == favoriteDriverId {
-                        Image(systemName: "checkmark")
-                    }
+        List(viewModel.drivers) { driver in
+            HStack {
+                Text(driver.fullName)
+                Spacer()
+                if driver.driverId == favoriteDriverId {
+                    Image(systemName: "checkmark")
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    favoriteDriverId = driver.driverId
-                }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                favoriteDriverId = driver.driverId
             }
         }
         .task {
@@ -27,6 +24,7 @@ struct DriverSettingsView: View {
         }
     }
 }
+
 
 #Preview {
     DriverSettingsView()

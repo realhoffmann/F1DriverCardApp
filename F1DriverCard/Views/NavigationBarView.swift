@@ -8,19 +8,16 @@ struct NavigationBarView: View {
     
     var body: some View {
         TabView {
-            // Home Tab
             HomeView()
                 .tabItem {
                     Image(systemName: "house.fill")
                 }
             
-            // Standings Tab (Placeholder for now)
             StandingsView()
                 .tabItem {
                     Image(systemName: "list.bullet")
                 }
             
-            // Settings Tab
             DriverSettingsView()
                 .tabItem {
                     Image(systemName: "gearshape.fill")
@@ -29,7 +26,8 @@ struct NavigationBarView: View {
         .tint(.white)
     }
 }
- // To be implemented
+
+// Placeholder for future implementation
 struct StandingsView: View {
     var body: some View {
         VStack {
@@ -39,6 +37,7 @@ struct StandingsView: View {
         }
     }
 }
+
 
 #Preview {
     NavigationBarView()

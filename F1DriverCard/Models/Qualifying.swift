@@ -1,36 +1,58 @@
-import Foundation
-
+// MARK: - Qualifying Models
 struct QualifyingResponse: Decodable {
-    let MRData: QualifyingMRData
+    let mrData: QualifyingMRData
+    
+    private enum CodingKeys: String, CodingKey {
+        case mrData = "MRData"
+    }
 }
 
 struct QualifyingMRData: Decodable {
-    let RaceTable: QualifyingRaceTable
+    let raceTable: QualifyingRaceTable
+    
+    private enum CodingKeys: String, CodingKey {
+        case raceTable = "RaceTable"
+    }
 }
 
 struct QualifyingRaceTable: Decodable {
-    let Races: [QualifyingRace]
+    let races: [QualifyingRace]
+    
+    private enum CodingKeys: String, CodingKey {
+        case races = "Races"
+    }
 }
 
 struct QualifyingRace: Decodable {
     let season: String
     let round: String
-    let QualifyingResults: [QualifyingResult]
+    let qualifyingResults: [QualifyingResult]
+    
+    private enum CodingKeys: String, CodingKey {
+        case season, round
+        case qualifyingResults = "QualifyingResults"
+    }
 }
 
 struct QualifyingResult: Decodable, Identifiable {
-    var id: String { Driver.driverId }
+    var id: String { driver.driverId }
     let position: String
-    let Driver: QualifyingDriver
-    let Q1: String?
-    let Q2: String?
-    let Q3: String?
+    let driver: QualifyingDriver
+    let q1: String?
+    let q2: String?
+    let q3: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case position
+        case driver = "Driver"
+        case q1 = "Q1"
+        case q2 = "Q2"
+        case q3 = "Q3"
+    }
 }
 
-struct QualifyingDriver: Decodable {
+struct QualifyingDriver: Decodable, DriverNameable {
     let driverId: String
     let givenName: String
     let familyName: String
-    
-    var fullName: String { "\(givenName) \(familyName)" }
 }

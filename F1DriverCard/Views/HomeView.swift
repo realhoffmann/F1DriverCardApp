@@ -113,6 +113,11 @@ struct HomeView: View {
                                 season: raceResultViewModel.race?.season ?? "2024",
                                 round: raceResultViewModel.race?.round ?? "last"
                             )
+                            await driverStandingsViewModel.fetchDriverStandings(
+                                for: favoriteDriverId,
+                                season: raceResultViewModel.race?.season ?? "2024",
+                                round: raceResultViewModel.race?.round ?? "last"
+                            )
                             dragOffset = -500
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 dragOffset = 0
@@ -145,6 +150,11 @@ struct HomeView: View {
                                             season: raceResultViewModel.race?.season ?? "2024",
                                             round: raceResultViewModel.race?.round ?? "last"
                                         )
+                                        await driverStandingsViewModel.fetchDriverStandings(
+                                            for: favoriteDriverId,
+                                            season: raceResultViewModel.race?.season ?? "2024",
+                                            round: raceResultViewModel.race?.round ?? "last"
+                                        )
                                         dragOffset = -500
                                         withAnimation(.easeInOut(duration: 0.3)) {
                                             dragOffset = 0
@@ -159,6 +169,11 @@ struct HomeView: View {
                                         try? await Task.sleep(nanoseconds: 300_000_000)
                                         await raceResultViewModel.fetchNextRaceResult()
                                         await qualifyingViewModel.fetchQualifyingResult(
+                                            for: favoriteDriverId,
+                                            season: raceResultViewModel.race?.season ?? "2024",
+                                            round: raceResultViewModel.race?.round ?? "last"
+                                        )
+                                        await driverStandingsViewModel.fetchDriverStandings(
                                             for: favoriteDriverId,
                                             season: raceResultViewModel.race?.season ?? "2024",
                                             round: raceResultViewModel.race?.round ?? "last"
@@ -186,6 +201,11 @@ struct HomeView: View {
                             try? await Task.sleep(nanoseconds: 300_000_000)
                             await raceResultViewModel.fetchNextRaceResult()
                             await qualifyingViewModel.fetchQualifyingResult(
+                                for: favoriteDriverId,
+                                season: raceResultViewModel.race?.season ?? "2024",
+                                round: raceResultViewModel.race?.round ?? "last"
+                            )
+                            await driverStandingsViewModel.fetchDriverStandings(
                                 for: favoriteDriverId,
                                 season: raceResultViewModel.race?.season ?? "2024",
                                 round: raceResultViewModel.race?.round ?? "last"

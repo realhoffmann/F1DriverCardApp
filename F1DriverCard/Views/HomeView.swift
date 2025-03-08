@@ -108,6 +108,11 @@ struct HomeView: View {
                             // 300_000_000nanoSec = 0.3sec
                             try? await Task.sleep(nanoseconds: 300_000_000)
                             await raceResultViewModel.fetchPreviousRaceResult()
+                            await qualifyingViewModel.fetchQualifyingResult(
+                                for: favoriteDriverId,
+                                season: raceResultViewModel.race?.season ?? "2024",
+                                round: raceResultViewModel.race?.round ?? "last"
+                            )
                             dragOffset = -500
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 dragOffset = 0
@@ -135,6 +140,11 @@ struct HomeView: View {
                                     Task {
                                         try? await Task.sleep(nanoseconds: 300_000_000)
                                         await raceResultViewModel.fetchPreviousRaceResult()
+                                        await qualifyingViewModel.fetchQualifyingResult(
+                                            for: favoriteDriverId,
+                                            season: raceResultViewModel.race?.season ?? "2024",
+                                            round: raceResultViewModel.race?.round ?? "last"
+                                        )
                                         dragOffset = -500
                                         withAnimation(.easeInOut(duration: 0.3)) {
                                             dragOffset = 0
@@ -148,6 +158,11 @@ struct HomeView: View {
                                     Task {
                                         try? await Task.sleep(nanoseconds: 300_000_000)
                                         await raceResultViewModel.fetchNextRaceResult()
+                                        await qualifyingViewModel.fetchQualifyingResult(
+                                            for: favoriteDriverId,
+                                            season: raceResultViewModel.race?.season ?? "2024",
+                                            round: raceResultViewModel.race?.round ?? "last"
+                                        )
                                         dragOffset = 500
                                         withAnimation(.easeInOut(duration: 0.3)) {
                                             dragOffset = 0
@@ -170,6 +185,11 @@ struct HomeView: View {
                             }
                             try? await Task.sleep(nanoseconds: 300_000_000)
                             await raceResultViewModel.fetchNextRaceResult()
+                            await qualifyingViewModel.fetchQualifyingResult(
+                                for: favoriteDriverId,
+                                season: raceResultViewModel.race?.season ?? "2024",
+                                round: raceResultViewModel.race?.round ?? "last"
+                            )
                             dragOffset = 500
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 dragOffset = 0

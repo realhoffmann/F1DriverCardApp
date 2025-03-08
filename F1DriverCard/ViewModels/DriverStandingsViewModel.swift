@@ -4,8 +4,8 @@ import Foundation
 class DriverStandingsViewModel: ObservableObject {
     @Published var championshipPosition: String = "N/A"
     
-    func fetchDriverStandings(for driverId: String, season: String = "2024", round: String = "last") async {
-        let urlString = APIEndpoints.driverStandings(season: season, round: round)
+    func fetchDriverStandings(for driverId: String, round: String = "last") async {
+        let urlString = APIEndpoints.driverStandings(round: round)
         do {
             let response: DriverStandingsResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             if let standingsList = response.mrData.standingsTable.standingsLists.first?.driverStandings,

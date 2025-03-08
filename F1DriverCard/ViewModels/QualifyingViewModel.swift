@@ -6,8 +6,8 @@ class QualifyingViewModel: ObservableObject {
     @Published var qualifyingPosition: String = "N/A"
     @Published var lapTime: String = "N/A"
     
-    func fetchQualifyingResult(for driverId: String, season: String = "2024", round: String = "last") async {
-        let urlString = APIEndpoints.qualifying(season: season, round: round)
+    func fetchQualifyingResult(for driverId: String, round: String = "last") async {
+        let urlString = APIEndpoints.qualifying(round: round)
         do {
             let response: QualifyingResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             if let race = response.mrData.raceTable.races.first,

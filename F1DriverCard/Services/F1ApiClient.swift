@@ -32,10 +32,10 @@ final class F1ApiClient {
 }
 
 // MARK: - API Endpoints
-
 enum APIEndpoints {
     static let baseURL = "https://api.jolpi.ca/ergast/f1"
-    static let current = "current"
+    // TODO: change to current once API is updated
+    static let current = "2024"
     
     static let drivers = "\(baseURL)/\(current)/drivers.json"
     
@@ -43,15 +43,15 @@ enum APIEndpoints {
         return "\(baseURL)/\(current)/drivers/\(driverId).json"
     }
     
-    static func driverStandings(season: String = "2024", round: String = "last") -> String {
-        return "\(baseURL)/\(season)/\(round)/driverStandings.json"
+    static func driverStandings(round: String = "last") -> String {
+        return "\(baseURL)/\(current)/\(round)/driverStandings.json"
     }
     
-    static func qualifying(season: String = "2024", round: String = "last") -> String {
-        return "\(baseURL)/\(season)/\(round)/qualifying.json"
+    static func qualifying(round: String = "last") -> String {
+        return "\(baseURL)/\(current)/\(round)/qualifying.json"
     }
     
-    static func raceResults(season: String = "2024", round: String = "last") -> String {
-        return "\(baseURL)/\(season)/\(round)/results.json"
+    static func raceResults(round: String = "last") -> String {
+        return "\(baseURL)/\(current)/\(round)/results.json"
     }
 }

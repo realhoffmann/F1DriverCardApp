@@ -8,8 +8,8 @@ class RaceResultViewModel: ObservableObject {
         (race?.circuit.circuitId.lowercased() ?? "yas_marina") + "_track"
     }
     
-    func fetchRaceResult(season: String = "2024", round: String = "last") async {
-        let urlString = APIEndpoints.raceResults(season: season, round: round)
+    func fetchRaceResult(round: String = "last") async {
+        let urlString = APIEndpoints.raceResults(round: round)
         do {
             let response: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: urlString)
             if let fetchedRace = response.mrData.raceTable.races.first {
@@ -22,30 +22,27 @@ class RaceResultViewModel: ObservableObject {
         }
     }
     
-    // Fetches the previous race result by decrementing the current round number.
-    func fetchPreviousRaceResult(season: String = "2024") async {
+    func fetchPreviousRaceResult() async {
         if let currentRace = race,
            let currentRoundInt = Int(currentRace.round),
            currentRoundInt > 1 {
             let previousRound = String(currentRoundInt - 1)
-            await fetchRaceResult(season: season, round: previousRound)
+            await fetchRaceResult(round: previousRound)
         } else {
             print("Cannot load previous race: current race is not set or round is invalid")
         }
     }
     
-    // Fetches the next race result by incrementing the current round number.
-    func fetchNextRaceResult(season: String = "2024") async {
+    func fetchNextRaceResult() async {
         if let currentRace = race,
            let currentRoundInt = Int(currentRace.round) {
             let nextRound = String(currentRoundInt + 1)
-            await fetchRaceResult(season: season, round: nextRound)
+            await fetchRaceResult(round: nextRound)
         } else {
             print("Cannot load next race: current race is not set or round is invalid")
         }
     }
     
-    // Returns the result for the given driver ID if available.
     func resultForDriver(_ driverId: String) -> Result? {
         guard let race = race else {
             print("Race data is not available yet")

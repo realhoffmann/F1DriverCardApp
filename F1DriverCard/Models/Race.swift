@@ -1,5 +1,4 @@
 // MARK: - Race Result Models
-
 struct RaceResultResponse: Decodable {
     let mrData: RaceResultMRData
     

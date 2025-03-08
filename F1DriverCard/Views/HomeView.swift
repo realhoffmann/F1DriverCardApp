@@ -7,6 +7,7 @@ struct HomeView: View {
     @StateObject var qualifyingViewModel = QualifyingViewModel()
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
     @State private var dragOffset: CGFloat = 0
+    @State private var showDriverSettings: Bool = false
     
     private func updateRaceData() async {
         let round = raceResultViewModel.race?.round ?? "last"
@@ -49,6 +50,14 @@ struct HomeView: View {
                 Image(systemName: "chevron.down")
                     .foregroundStyle(.gray)
                 Spacer()
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                showDriverSettings = true
+            }
+            .sheet(isPresented: $showDriverSettings) {
+                DriverSettingsView()
+                    .presentationDetents([.large])
             }
             
             // Helmet Image

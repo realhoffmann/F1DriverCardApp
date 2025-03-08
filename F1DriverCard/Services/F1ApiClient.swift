@@ -54,4 +54,12 @@ enum APIEndpoints {
     static func raceResults(round: String = "last") -> String {
         return "\(baseURL)/\(current)/\(round)/results.json"
     }
+    
+    static func driverConstructors(driverId: String) -> String {
+        return "\(baseURL)/\(current)/drivers/\(driverId)/constructors.json"
+    }
+    
+    static var constructors: String {
+        return "\(baseURL)/\(current)/constructors.json"
+    }
 }

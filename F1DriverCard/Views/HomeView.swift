@@ -113,6 +113,8 @@ struct HomeView: View {
             HStack {
                 Image(systemName: "chevron.left")
                     .foregroundStyle(.gray)
+                    .frame(height: 44)
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         Task {
                             withAnimation(.easeInOut(duration: 0.3)) {
@@ -179,6 +181,8 @@ struct HomeView: View {
                 Spacer()
                 Image(systemName: "chevron.right")
                     .foregroundStyle(.gray)
+                    .frame(height: 44)
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         Task {
                             withAnimation(.easeInOut(duration: 0.3)) {

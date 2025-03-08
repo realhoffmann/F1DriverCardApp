@@ -4,7 +4,6 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     @Published var driver: Driver?
     @StateObject var raceResultViewModel = RaceResultViewModel()
-    @Published var qualifyingPosition: String = ""
     @Published var championships: Int = 0
     
     var driverImage: String {
@@ -34,7 +33,7 @@ class HomeViewModel: ObservableObject {
     func fetchDriverData() async {
         // Retrieve the favorite driverId; default to "max_verstappen"
         var storedId = UserDefaults.standard.string(forKey: "favoriteDriverId") ?? "verstappen"
-        // If the stored id (case-insensitive) is "verstappen", use "max_verstappen"
+        // If the stored id is "verstappen", use "max_verstappen"
         if storedId.lowercased() == "verstappen" {
             storedId = "max_verstappen"
         }
@@ -49,37 +48,12 @@ class HomeViewModel: ObservableObject {
                     self.driver = fetchedDriver
                 }
                 // Fetch the latest qualifying result for this driver from round last of the current season
-                await fetchQualifyingResult(for: fetchedDriver.driverId)
+                await QualifyingViewModel().fetchQualifyingResult(for: fetchedDriver.driverId)
             } else {
                 print("Driver not found for driverId \(storedId)")
             }
         } catch {
             print("Error fetching driver data: \(error)")
-        }
-    }
-    
-    // Fetch the qualifying result for the given driver from the current round last qualifying endpoint.
-    private func fetchQualifyingResult(for driverId: String) async {
-        // TODO: change 2024 to current once season starts
-        let urlString = "https://api.jolpi.ca/ergast/f1/2024/last/qualifying.json"
-        do {
-            let response: QualifyingResponse = try await F1ApiClient.shared.fetchData(from: urlString)
-            if let race = response.MRData.RaceTable.Races.first {
-                if let result = race.QualifyingResults.first(where: { $0.Driver.driverId.lowercased() == driverId.lowercased() }) {
-                    DispatchQueue.main.async {
-                        self.qualifyingPosition = result.position
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.qualifyingPosition = "N/A"
-                    }
-                }
-            }
-        } catch {
-            print("Error fetching qualifying data: \(error)")
-            DispatchQueue.main.async {
-                self.qualifyingPosition = "N/A"
-            }
         }
     }
 }

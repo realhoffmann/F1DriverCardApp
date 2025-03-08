@@ -3,6 +3,14 @@ import Foundation
 class RaceResultViewModel: ObservableObject {
     @Published var race: Race?
     
+    var trackImage: String {
+        if let nationality = race?.Circuit.circuitId {
+            return nationality.lowercased() + "_track"
+        } else {
+            return "yas_marina"
+        }
+    }
+    
     func fetchRaceResult() async {
         // TODO: change 2024 to current once season starts
         let urlString = "https://api.jolpi.ca/ergast/f1/2024/last/results.json"
@@ -18,9 +26,9 @@ class RaceResultViewModel: ObservableObject {
         }
     }
     
-    /// Returns the result for the given driver ID if available.
+    // Returns the result for the given driver ID if available.
     func resultForDriver(_ driverId: String) -> Result? {
-        guard let race = race else {
+        guard let race else {
             print("Race data is not available yet")
             return nil
         }

@@ -1,22 +1,22 @@
 import Foundation
 
-struct DriverStandingsResponse: Codable {
+struct DriverStandingsResponse: Decodable {
     let MRData: StandingsMRData
 }
 
-struct StandingsMRData: Codable {
+struct StandingsMRData: Decodable {
     let StandingsTable: StandingsTable
 }
 
-struct StandingsTable: Codable {
+struct StandingsTable: Decodable {
     let StandingsLists: [StandingsList]
 }
 
-struct StandingsList: Codable {
+struct StandingsList: Decodable {
     let DriverStandings: [DriverStanding]
 }
 
-struct DriverStanding: Codable {
+struct DriverStanding: Decodable {
     let position: String
     let points: String
     let Driver: Driver

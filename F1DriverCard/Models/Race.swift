@@ -1,29 +1,30 @@
 import Foundation
 
-struct RaceResultResponse: Codable {
+struct RaceResultResponse: Decodable {
     let MRData: RaceResultMRData
 }
 
-struct RaceResultMRData: Codable {
+struct RaceResultMRData: Decodable {
     let RaceTable: RaceResultRaceTable
 }
 
-struct RaceResultRaceTable: Codable {
+struct RaceResultRaceTable: Decodable {
     let season: String
     let round: String
     let Races: [Race]
 }
 
-struct Race: Codable, Identifiable {
+struct Race: Decodable, Identifiable {
     var id: String { round }
     let season: String
     let round: String
     let raceName: String
     let date: String
     let Results: [Result]
+    let Circuit: Circuit
 }
 
-struct Result: Codable, Identifiable {
+struct Result: Decodable, Identifiable {
     var id: String { Driver.driverId }
     let number: String
     let position: String
@@ -32,14 +33,19 @@ struct Result: Codable, Identifiable {
     let Constructor: RaceResultConstructor
 }
 
-struct RaceResultDriver: Codable {
+struct Circuit: Decodable {
+    let circuitId: String
+    let circuitName: String
+}
+
+struct RaceResultDriver: Decodable {
     let driverId: String
     let givenName: String
     let familyName: String
     var fullName: String { "\(givenName) \(familyName)" }
 }
 
-struct RaceResultConstructor: Codable {
+struct RaceResultConstructor: Decodable {
     let constructorId: String
     let name: String
 }

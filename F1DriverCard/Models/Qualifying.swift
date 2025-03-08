@@ -1,24 +1,24 @@
 import Foundation
 
-struct QualifyingResponse: Codable {
+struct QualifyingResponse: Decodable {
     let MRData: QualifyingMRData
 }
 
-struct QualifyingMRData: Codable {
+struct QualifyingMRData: Decodable {
     let RaceTable: QualifyingRaceTable
 }
 
-struct QualifyingRaceTable: Codable {
+struct QualifyingRaceTable: Decodable {
     let Races: [QualifyingRace]
 }
 
-struct QualifyingRace: Codable {
+struct QualifyingRace: Decodable {
     let season: String
     let round: String
     let QualifyingResults: [QualifyingResult]
 }
 
-struct QualifyingResult: Codable, Identifiable {
+struct QualifyingResult: Decodable, Identifiable {
     var id: String { Driver.driverId }
     let position: String
     let Driver: QualifyingDriver
@@ -27,7 +27,7 @@ struct QualifyingResult: Codable, Identifiable {
     let Q3: String?
 }
 
-struct QualifyingDriver: Codable {
+struct QualifyingDriver: Decodable {
     let driverId: String
     let givenName: String
     let familyName: String

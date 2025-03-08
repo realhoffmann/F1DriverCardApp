@@ -4,6 +4,7 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @StateObject var raceResultViewModel = RaceResultViewModel()
     @StateObject var driverStandingsViewModel = DriverStandingsViewModel()
+    @StateObject var qualifyingViewModel = QualifyingViewModel()
     @AppStorage("favoriteDriverId")
     var favoriteDriverId: String = "max_verstappen"
     @State private var showSettings = false
@@ -64,11 +65,11 @@ struct HomeView: View {
                             .frame(height: 1)
                             .overlay(.gray)
                         HStack {
-                            Text("Qualified: \(viewModel.qualifyingPosition)")
+                            Text("Qualified: \(qualifyingViewModel.qualifyingPosition)")
                                 .font(.f1Regular(18))
                                 .foregroundColor(.white)
                             Spacer()
-                            Text("1:09.226")
+                            Text(qualifyingViewModel.lapTime)
                                 .font(.f1Regular(18))
                                 .foregroundColor(.white)
                         }
@@ -104,7 +105,7 @@ struct HomeView: View {
                 Image(systemName: "chevron.left")
                     .foregroundStyle(.gray)
                 Spacer()
-                Image(.australiaTrack)
+                Image(raceResultViewModel.trackImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)
@@ -126,12 +127,14 @@ struct HomeView: View {
             await viewModel.fetchDriverData()
             await raceResultViewModel.fetchRaceResult()
             await driverStandingsViewModel.fetchDriverStandings(for: favoriteDriverId)
+            await qualifyingViewModel.fetchQualifyingResult(for: favoriteDriverId)
         }
         .onChange(of: favoriteDriverId) { _ in
             Task {
                 await viewModel.fetchDriverData()
                 await raceResultViewModel.fetchRaceResult()
                 await driverStandingsViewModel.fetchDriverStandings(for: favoriteDriverId)
+                await qualifyingViewModel.fetchQualifyingResult(for: favoriteDriverId)
             }
         }
     }
@@ -140,18 +143,3 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
-//Image(.redBullRacingCar)
-//    .resizable()
-//    .scaledToFit()
-//    .frame(height: 100)
-//
-//Image(systemName: "chevron.down")
-//    .resizable()
-//    .scaledToFit()
-//    .frame(height: 8)
-//    .foregroundStyle(.gray)
-//Image(.redBullLogo)
-//    .resizable()
-//    .scaledToFit()
-//    .frame(height: 100)
-//.padding(.horizontal, -30)

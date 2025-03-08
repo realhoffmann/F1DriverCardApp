@@ -124,12 +124,12 @@ struct HomeView: View {
             await driverStandingsViewModel.fetchDriverStandings(for: favoriteDriverId)
             await qualifyingViewModel.fetchQualifyingResult(for: favoriteDriverId)
         }
-        .onChange(of: favoriteDriverId) { _ in
+        .onChange(of: favoriteDriverId) { _, newValue in
             Task {
                 await viewModel.fetchDriverData()
                 await raceResultViewModel.fetchRaceResult()
-                await driverStandingsViewModel.fetchDriverStandings(for: favoriteDriverId)
-                await qualifyingViewModel.fetchQualifyingResult(for: favoriteDriverId)
+                await driverStandingsViewModel.fetchDriverStandings(for: newValue)
+                await qualifyingViewModel.fetchQualifyingResult(for: newValue)
             }
         }
     }

@@ -37,8 +37,8 @@ struct RaceSchedule: Decodable, Identifiable {
     let SecondPractice: PracticeSession?
     let ThirdPractice: PracticeSession?
     let Qualifying: PracticeSession?
-    let Sprint: PracticeSession?
     let SprintQualifying: PracticeSession?
+    let Sprint: PracticeSession?
 }
 
 struct RaceCircuitSchedule: Decodable {

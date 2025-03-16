@@ -32,7 +32,7 @@ struct StandingsList: Decodable {
 }
 
 struct DriverStanding: Decodable {
-    let position: String
+    let position: String?
     let points: String
     let driver: Driver
     

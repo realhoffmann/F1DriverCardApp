@@ -56,7 +56,7 @@ struct DriverSettingsView: View {
         .onAppear {
             Task {
                 await driversViewModel.fetchDrivers()
-                await raceResultViewModel.fetchRaceResult()
+                await raceResultViewModel.fetchRaceData()
                 await constructorsViewModel.fetchConstructors()
                 if let team = driverTeamMapping[favoriteDriverId] {
                     selectedTeam = team

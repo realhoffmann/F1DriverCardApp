@@ -10,7 +10,7 @@ class HomeViewModel: ObservableObject {
     }
     
     var helmetImage: String {
-        (driver?.familyName.lowercased() ?? "f1Logo") + "Helmet"
+        (driver?.familyName.lowercased() ?? "norris") + "Helmet"
     }
     
     var flagImage: String {

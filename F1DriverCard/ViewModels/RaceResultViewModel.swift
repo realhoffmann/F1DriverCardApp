@@ -3,43 +3,52 @@ import Foundation
 @MainActor
 class RaceResultViewModel: ObservableObject {
     @Published var race: Race?
+    @Published var raceSchedule: RaceSchedule?
+    @Published private(set) var currentRound: Int = 1
     
     var trackImage: String {
-        (race?.circuit.circuitId.lowercased() ?? "yas_marina") + "_track"
+        if let race {
+            return (race.circuit.circuitId.lowercased() + "_track")
+        } else if let schedule = raceSchedule {
+            return schedule.Circuit.circuitId.lowercased() + "_track"
+        }
+        return "yas_marina_track"
     }
     
-    func fetchRaceResult(round: String = "last") async {
-        let urlString = APIEndpoints.raceResults(round: round)
+    func fetchRaceData() async {
+        let roundString = String(currentRound)
         do {
-            let response: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: urlString)
-            if let fetchedRace = response.mrData.raceTable.races.first {
-                print("Fetched race: \(fetchedRace.raceName)")
-                print("Circuit ID: \(fetchedRace.circuit.circuitId)")
+            let resultResponse: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: APIEndpoints.raceResults(round: roundString))
+            
+            if let fetchedRace = resultResponse.mrData.raceTable.races.first,
+               !fetchedRace.results.isEmpty {
                 self.race = fetchedRace
+                self.raceSchedule = nil
+            } else {
+                self.race = nil
+                let scheduleResponse: RaceScheduleResponse = try await F1ApiClient.shared.fetchData(from: APIEndpoints.races)
+                if let scheduleRace = scheduleResponse.mrData.raceTable.races.first(where: { $0.round == roundString }) {
+                    self.raceSchedule = scheduleRace
+                } else {
+                    self.raceSchedule = nil
+                }
             }
         } catch {
-            print("Error fetching race result: \(error)")
+            print("Error fetching race data: \(error)")
         }
     }
     
-    func fetchPreviousRaceResult() async {
-        if let currentRace = race,
-           let currentRoundInt = Int(currentRace.round),
-           currentRoundInt > 1 {
-            let previousRound = String(currentRoundInt - 1)
-            await fetchRaceResult(round: previousRound)
-        } else {
-            print("Cannot load previous race: current race is not set or round is invalid")
-        }
+    func fetchNextRace() async {
+        currentRound += 1
+        await fetchRaceData()
     }
     
-    func fetchNextRaceResult() async {
-        if let currentRace = race,
-           let currentRoundInt = Int(currentRace.round) {
-            let nextRound = String(currentRoundInt + 1)
-            await fetchRaceResult(round: nextRound)
+    func fetchPreviousRace() async {
+        if currentRound > 1 {
+            currentRound -= 1
+            await fetchRaceData()
         } else {
-            print("Cannot load next race: current race is not set or round is invalid")
+            print("Already at first round")
         }
     }
     
@@ -48,13 +57,6 @@ class RaceResultViewModel: ObservableObject {
             print("Race data is not available yet")
             return nil
         }
-        if let result = race.results.first(where: { $0.driver.driverId.lowercased() == driverId.lowercased() }) {
-            print("Found result for driver: \(result.driver.fullName), Position: \(result.position)")
-            return result
-        } else {
-            print("No race result found for driverId: \(driverId)")
-            print("Available drivers: \(race.results.map { $0.driver.driverId })")
-            return nil
-        }
+        return race.results.first(where: { $0.driver.driverId.lowercased() == driverId.lowercased() })
     }
 }

@@ -33,35 +33,34 @@ final class F1ApiClient {
 
 // MARK: - API Endpoints
 enum APIEndpoints {
-    static let baseURL = "https://api.jolpi.ca/ergast/f1"
-    static let current = "current"
-    static let drivers = "\(baseURL)/\(current)/drivers.json"
+    static let baseURL = "https://api.jolpi.ca/ergast/f1/current"
+    static let drivers = "\(baseURL)/drivers.json"
     
     static func driverData(driverId: String) -> String {
-        return "\(baseURL)/\(current)/drivers/\(driverId).json"
+        return "\(baseURL)/drivers/\(driverId).json"
     }
     
     static func driverStandings(round: String = "last") -> String {
-        return "\(baseURL)/\(current)/\(round)/driverStandings.json"
+        return "\(baseURL)/\(round)/driverStandings.json"
     }
     
     static func qualifying(round: String = "last") -> String {
-        return "\(baseURL)/\(current)/\(round)/qualifying.json"
+        return "\(baseURL)/\(round)/qualifying.json"
     }
     
     static func raceResults(round: String = "last") -> String {
-        return "\(baseURL)/\(current)/\(round)/results.json"
+        return "\(baseURL)/\(round)/results.json"
     }
     
     static func driverConstructors(driverId: String) -> String {
-        return "\(baseURL)/\(current)/drivers/\(driverId)/constructors.json"
+        return "\(baseURL)/drivers/\(driverId)/constructors.json"
     }
     
     static var constructors: String {
-        return "\(baseURL)/\(current)/constructors.json"
+        return "\(baseURL)/constructors.json"
     }
     
     static var races: String {
-        return "\(baseURL)/\(current)/races.json"
+        return "\(baseURL)/races.json"
     }
 }

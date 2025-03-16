@@ -7,6 +7,7 @@ struct RaceDetailsView: View {
     @ObservedObject var driverStandingsViewModel: DriverStandingsViewModel
     @ObservedObject var viewModel: HomeViewModel
     @Binding var favoriteDriverId: String
+    @Binding var selectedTimeZone: TimeZone
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -43,42 +44,84 @@ struct RaceDetailsView: View {
                     .foregroundColor(.white)
                 Divider().frame(height: 1).overlay(.gray)
                 if let firstPractice = schedule.FirstPractice {
-                    Text("First Practice: \(formatDate(firstPractice.date)) \(formatTime(firstPractice.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("First Practice: ")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatDate(firstPractice.date)) \(formatTime(firstPractice.time))")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                    }
                     Divider().frame(height: 1).overlay(.gray)
                 }
                 if let secondPractice = schedule.SecondPractice {
-                    Text("Second Practice: \(formatDate(secondPractice.date)) \(formatTime(secondPractice.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("Second Practice: ")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatDate(secondPractice.date)) \(formatTime(secondPractice.time))")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                    }
                     Divider().frame(height: 1).overlay(.gray)
                 } else if let sprintQualifying = schedule.SprintQualifying {
-                    Text("Sprint Qualifying: \(formatDate(sprintQualifying.date)) \(formatTime(sprintQualifying.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("Sprint Qualifying: ")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatDate(sprintQualifying.date)) \(formatTime(sprintQualifying.time))")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                    }
                     Divider().frame(height: 1).overlay(.gray)
                 }
                 if let thirdPractice = schedule.ThirdPractice {
-                    Text("Third Practice: \(formatDate(thirdPractice.date)) \(formatTime(thirdPractice.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("Third Practice: ")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatDate(thirdPractice.date)) \(formatTime(thirdPractice.time))")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                    }
                     Divider().frame(height: 1).overlay(.gray)
                 } else if let sprint = schedule.Sprint {
-                    Text("Sprint: \(formatDate(sprint.date)) \(formatTime(sprint.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("Sprint: ")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatDate(sprint.date)) \(formatTime(sprint.time))")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                    }
                     Divider().frame(height: 1).overlay(.gray)
                 }
                 if let qualifying = schedule.Qualifying {
-                    Text("Qualifying: \(formatDate(qualifying.date)) \(formatTime(qualifying.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("Qualifying: ")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatDate(qualifying.date)) \(formatTime(qualifying.time))")
+                            .font(.f1Regular(18))
+                            .foregroundColor(.white)
+                    }
                     Divider().frame(height: 1).overlay(.gray)
                 }
-                Text("Race: \(formatDate(schedule.date)) \(formatTime(schedule.time))")
-                    .font(.f1Regular(18))
-                    .foregroundColor(.white)
+                HStack {
+                    Text("Race: ")
+                        .font(.f1Regular(18))
+                        .foregroundColor(.white)
+                    Spacer()
+                    Text("\(formatDate(schedule.date)) \(formatTime(schedule.time))")
+                        .font(.f1Regular(18))
+                        .foregroundColor(.white)
+                }
                 Divider().frame(height: 1).overlay(.gray)
             } else {
                 Text("Loading race data...")
@@ -101,13 +144,16 @@ struct RaceDetailsView: View {
     private func formatTime(_ time: String) -> String {
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm:ss'Z'"
+        timeFormatter.timeZone = TimeZone(abbreviation: "UTC")
         if let time = timeFormatter.date(from: time) {
             timeFormatter.dateFormat = "HH:mm"
+            timeFormatter.timeZone = selectedTimeZone
             return timeFormatter.string(from: time)
         }
         return time
     }
 }
+
 #Preview {
     let raceResultViewModel = RaceResultViewModel()
     raceResultViewModel.race = Race(
@@ -168,7 +214,8 @@ struct RaceDetailsView: View {
         qualifyingViewModel: qualifyingViewModel,
         driverStandingsViewModel: driverStandingsViewModel,
         viewModel: homeViewModel,
-        favoriteDriverId: .constant("max_verstappen")
+        favoriteDriverId: .constant("max_verstappen"),
+        selectedTimeZone: .constant(.current)
     )
 }
 #Preview {
@@ -194,6 +241,7 @@ struct RaceDetailsView: View {
         qualifyingViewModel: QualifyingViewModel(),
         driverStandingsViewModel: DriverStandingsViewModel(),
         viewModel: HomeViewModel(),
-        favoriteDriverId: .constant("max_verstappen")
+        favoriteDriverId: .constant("max_verstappen"),
+        selectedTimeZone: .constant(.current)
     )
 }

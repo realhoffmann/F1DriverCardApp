@@ -7,6 +7,7 @@ struct DriverSettingsView: View {
     @StateObject var raceResultViewModel = RaceResultViewModel()
     @StateObject var constructorsViewModel = ConstructorViewModel()
     @State private var selectedTeam: String = ""
+    @State private var selectedTimeZone: TimeZone = .current
     
     var driverTeamMapping: [String: String] {
         guard let race = raceResultViewModel.race else { return [:] }
@@ -52,6 +53,15 @@ struct DriverSettingsView: View {
                     dismiss()
                 }
             }
+            
+            // Picker to select a timezone
+            Picker("Select Time Zone", selection: $selectedTimeZone) {
+                ForEach(TimeZone.knownTimeZoneIdentifiers, id: \.self) { identifier in
+                    Text(identifier).tag(TimeZone(identifier: identifier)!)
+                }
+            }
+            .pickerStyle(.menu)
+            .padding()
         }
         .onAppear {
             Task {

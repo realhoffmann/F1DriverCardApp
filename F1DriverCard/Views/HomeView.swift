@@ -9,6 +9,7 @@ struct HomeView: View {
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
     @State private var dragOffset: CGFloat = 0
     @State private var showDriverSettings: Bool = false
+    @State private var selectedTimeZone: TimeZone = .current
     
     private func updateRaceData() async {
         let round = raceResultViewModel.race?.round ?? "last"
@@ -33,7 +34,8 @@ struct HomeView: View {
                 qualifyingViewModel: qualifyingViewModel,
                 driverStandingsViewModel: driverStandingsViewModel,
                 viewModel: viewModel,
-                favoriteDriverId: $favoriteDriverId
+                favoriteDriverId: $favoriteDriverId,
+                selectedTimeZone: $selectedTimeZone
             )
             Spacer()
             TrackImageView(

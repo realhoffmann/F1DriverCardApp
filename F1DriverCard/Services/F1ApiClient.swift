@@ -34,9 +34,7 @@ final class F1ApiClient {
 // MARK: - API Endpoints
 enum APIEndpoints {
     static let baseURL = "https://api.jolpi.ca/ergast/f1"
-    // TODO: change to current once API is updated
-    static let current = "2024"
-    
+    static let current = "current"
     static let drivers = "\(baseURL)/\(current)/drivers.json"
     
     static func driverData(driverId: String) -> String {
@@ -61,5 +59,9 @@ enum APIEndpoints {
     
     static var constructors: String {
         return "\(baseURL)/\(current)/constructors.json"
+    }
+    
+    static var races: String {
+        return "\(baseURL)/\(current)/races.json"
     }
 }

@@ -6,15 +6,6 @@ class RaceResultViewModel: ObservableObject {
     @Published var raceSchedule: RaceSchedule?
     @Published private(set) var currentRound: Int = 1
     
-    var trackImage: String {
-        if let race {
-            return (race.circuit.circuitId.lowercased() + "_track")
-        } else if let schedule = raceSchedule {
-            return schedule.Circuit.circuitId.lowercased() + "_track"
-        }
-        return "yas_marina_track"
-    }
-    
     func fetchRaceData() async {
         let roundString = String(currentRound)
         do {

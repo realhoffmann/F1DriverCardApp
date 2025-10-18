@@ -19,7 +19,7 @@ struct TrackImageView: View {
                         }
                         try? await Task.sleep(nanoseconds: 300_000_000)
                         await raceResultViewModel.fetchPreviousRace()
-                        await raceScheduleViewModel.fetchPreviousRaceSchedule()
+                        raceScheduleViewModel.fetchPreviousRaceSchedule()
                         await updateRaceData()
                         dragOffset = -500
                         withAnimation(.easeInOut(duration: 0.3)) {
@@ -28,9 +28,7 @@ struct TrackImageView: View {
                     }
                 }
             Spacer()
-            Image(raceScheduleViewModel.raceSchedule != nil ?
-                  raceScheduleViewModel.trackImage :
-                    raceResultViewModel.trackImage)
+            Image(raceScheduleViewModel.trackImage)
             .resizable()
             .scaledToFit()
             .frame(height: 150)
@@ -49,7 +47,7 @@ struct TrackImageView: View {
                             Task {
                                 try? await Task.sleep(nanoseconds: 300_000_000)
                                 await raceResultViewModel.fetchPreviousRace()
-                                await raceScheduleViewModel.fetchPreviousRaceSchedule()
+                                raceScheduleViewModel.fetchPreviousRaceSchedule()
                                 await updateRaceData()
                                 dragOffset = -500
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -63,7 +61,7 @@ struct TrackImageView: View {
                             Task {
                                 try? await Task.sleep(nanoseconds: 300_000_000)
                                 await raceResultViewModel.fetchNextRace()
-                                await raceScheduleViewModel.fetchNextRaceSchedule()
+                                raceScheduleViewModel.fetchNextRaceSchedule()
                                 await updateRaceData()
                                 dragOffset = 500
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -89,7 +87,7 @@ struct TrackImageView: View {
                         }
                         try? await Task.sleep(nanoseconds: 300_000_000)
                         await raceResultViewModel.fetchNextRace()
-                        await raceScheduleViewModel.fetchNextRaceSchedule()
+                        raceScheduleViewModel.fetchNextRaceSchedule()
                         await updateRaceData()
                         dragOffset = 500
                         withAnimation(.easeInOut(duration: 0.3)) {

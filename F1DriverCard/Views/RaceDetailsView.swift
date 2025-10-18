@@ -13,7 +13,7 @@ struct RaceDetailsView: View {
         VStack(alignment: .leading, spacing: 8) {
             if let driverId = viewModel.driver?.driverId,
                let driverResult = raceResultViewModel.resultForDriver(driverId) {
-                Text(raceResultViewModel.race?.raceName ?? "Unknown")
+                Text(raceScheduleViewModel.raceSchedule?.raceName ?? "Unknown")
                     .font(.f1Bold(20))
                     .foregroundColor(.white)
                 Divider().frame(height: 1).overlay(.gray)

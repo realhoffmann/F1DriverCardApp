@@ -3,15 +3,32 @@ import Foundation
 @MainActor
 
 class RaceScheduleViewModel: ObservableObject {
-    @Published var raceSchedule: RaceSchedule?
+    @Published var raceSchedule: RaceSchedule? {
+        didSet { notifyDependents() }
+    }
     @Published private(set) var currentRound: Int = 1
     @Published private(set) var allRaces: [RaceSchedule] = []
+    weak var raceResultViewModel: RaceResultViewModel?
+    
+    private static let dateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd"
+        df.timeZone = TimeZone(abbreviation: "UTC")
+        return df
+    }()
 
     var trackImage: String {
         if let schedule = raceSchedule {
             return schedule.Circuit.circuitId.lowercased() + "_track"
         }
         return "yas_marina_track"
+    }
+    
+    func attach(resultVM: RaceResultViewModel) {
+        self.raceResultViewModel = resultVM
+        if let schedule = raceSchedule {
+            resultVM.updateFromSchedule(schedule)
+        }
     }
 
     func fetchRaceSchedule() async {
@@ -57,12 +74,16 @@ class RaceScheduleViewModel: ObservableObject {
 
     private func findCurrentRace(in races: [RaceSchedule]) -> RaceSchedule? {
         let today = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateFormatter = RaceScheduleViewModel.dateFormatter
 
         return races.first(where: { race in
             guard let raceDate = dateFormatter.date(from: race.date) else { return false }
             return raceDate >= today
         })
+    }
+    
+    private func notifyDependents() {
+        guard let schedule = raceSchedule else { return }
+        raceResultViewModel?.updateFromSchedule(schedule)
     }
 }

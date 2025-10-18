@@ -6,6 +6,13 @@ class RaceResultViewModel: ObservableObject {
     @Published var raceSchedule: RaceSchedule?
     @Published private(set) var currentRound: Int = 1
     
+    func updateFromSchedule(_ schedule: RaceSchedule) {
+        self.raceSchedule = schedule
+        self.currentRound = Int(schedule.round) ?? 1
+        self.race = nil
+        Task { await fetchRaceData() }
+    }
+    
     func fetchRaceData() async {
         let roundString = String(currentRound)
         do {

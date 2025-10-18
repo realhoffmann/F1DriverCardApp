@@ -24,7 +24,7 @@ struct HomeView: View {
     }
     
     private func updateRaceData() async {
-        let round = raceResultViewModel.race?.round ?? "last"
+        let round = String(raceScheduleViewModel.currentRound)
         async let qualifyingCall: () = qualifyingViewModel.fetchQualifyingResult(
             for: favoriteDriverId,
             round: round
@@ -67,6 +67,7 @@ struct HomeView: View {
                 .overlay(Color.black.opacity(0.7))
         )
         .task {
+            raceScheduleViewModel.attach(resultVM: raceResultViewModel)
             await viewModel.fetchDriverData()
             await raceResultViewModel.fetchRaceData()
             await raceScheduleViewModel.fetchRaceSchedule()

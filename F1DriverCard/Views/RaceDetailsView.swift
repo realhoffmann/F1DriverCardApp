@@ -43,86 +43,36 @@ struct RaceDetailsView: View {
                     .font(.f1Bold(20))
                     .foregroundColor(.white)
                 Divider().frame(height: 1).overlay(.gray)
-                if let firstPractice = schedule.FirstPractice {
-                    HStack {
-                        Text("First Practice: ")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(formatDate(firstPractice.date)) \(formatTime(firstPractice.time))")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                    }
-                    Divider().frame(height: 1).overlay(.gray)
+                
+                if let firstPractice = schedule.FirstPractice,
+                   let date = makeDate(dateString: firstPractice.date, timeString: firstPractice.time) {
+                    row(title: "First Practice", date: date)
                 }
-                if let secondPractice = schedule.SecondPractice {
-                    HStack {
-                        Text("Second Practice: ")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(formatDate(secondPractice.date)) \(formatTime(secondPractice.time))")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                    }
-                    Divider().frame(height: 1).overlay(.gray)
-                } else if let sprintQualifying = schedule.SprintQualifying {
-                    HStack {
-                        Text("Sprint Qualifying: ")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(formatDate(sprintQualifying.date)) \(formatTime(sprintQualifying.time))")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                    }
-                    Divider().frame(height: 1).overlay(.gray)
+                
+                if let secondPractice = schedule.SecondPractice,
+                   let date = makeDate(dateString: secondPractice.date, timeString: secondPractice.time) {
+                    row(title: "Second Practice", date: date)
+                } else if let sprintQualifying = schedule.SprintQualifying,
+                          let date = makeDate(dateString: sprintQualifying.date, timeString: sprintQualifying.time) {
+                    row(title: "Sprint Qualifying", date: date)
                 }
-                if let thirdPractice = schedule.ThirdPractice {
-                    HStack {
-                        Text("Third Practice: ")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(formatDate(thirdPractice.date)) \(formatTime(thirdPractice.time))")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                    }
-                    Divider().frame(height: 1).overlay(.gray)
-                } else if let sprint = schedule.Sprint {
-                    HStack {
-                        Text("Sprint: ")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(formatDate(sprint.date)) \(formatTime(sprint.time))")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                    }
-                    Divider().frame(height: 1).overlay(.gray)
+                
+                if let thirdPractice = schedule.ThirdPractice,
+                   let date = makeDate(dateString: thirdPractice.date, timeString: thirdPractice.time) {
+                    row(title: "Third Practice", date: date)
+                } else if let sprint = schedule.Sprint,
+                          let date = makeDate(dateString: sprint.date, timeString: sprint.time) {
+                    row(title: "Sprint", date: date)
                 }
-                if let qualifying = schedule.Qualifying {
-                    HStack {
-                        Text("Qualifying: ")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                        Spacer()
-                        Text("\(formatDate(qualifying.date)) \(formatTime(qualifying.time))")
-                            .font(.f1Regular(18))
-                            .foregroundColor(.white)
-                    }
-                    Divider().frame(height: 1).overlay(.gray)
+                
+                if let qualifying = schedule.Qualifying,
+                   let date = makeDate(dateString: qualifying.date, timeString: qualifying.time) {
+                    row(title: "Qualifying", date: date)
                 }
-                HStack {
-                    Text("Race: ")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
-                    Spacer()
-                    Text("\(formatDate(schedule.date)) \(formatTime(schedule.time))")
-                        .font(.f1Regular(18))
-                        .foregroundColor(.white)
+                
+                if let raceDate = makeDate(dateString: schedule.date, timeString: schedule.time) {
+                    row(title: "Race", date: raceDate)
                 }
-                Divider().frame(height: 1).overlay(.gray)
             } else {
                 Text("Loading race data...")
                     .font(.subheadline)
@@ -131,26 +81,36 @@ struct RaceDetailsView: View {
         }
     }
     
-    private func formatDate(_ date: String) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        if let date = dateFormatter.date(from: date) {
-            dateFormatter.dateFormat = "dd.MM."
-            return dateFormatter.string(from: date)
+// MARK: - Helpers
+    @ViewBuilder
+    private func row(title: String, date: Date) -> some View {
+        HStack {
+            Text("\(title): ")
+                .font(.f1Regular(18))
+                .foregroundColor(.white)
+            Spacer()
+            Text(formatLocalDateTime(date: date))
+                .font(.f1Regular(18))
+                .foregroundColor(.white)
         }
-        return date
+        Divider().frame(height: 1).overlay(.gray)
     }
     
-    private func formatTime(_ time: String) -> String {
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm:ss'Z'"
-        timeFormatter.timeZone = TimeZone(abbreviation: "UTC")
-        if let time = timeFormatter.date(from: time) {
-            timeFormatter.dateFormat = "HH:mm"
-            timeFormatter.timeZone = selectedTimeZone
-            return timeFormatter.string(from: time)
-        }
-        return time
+    private func makeDate(dateString: String, timeString: String) -> Date? {
+        /// API provides e.g. date "2025-03-23" and time "07:00:00Z"
+        let isoString = "\(dateString)T\(timeString)"
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime]
+        return iso.date(from: isoString)
+    }
+    
+    private func formatLocalDateTime(date: Date) -> String {
+        let df = DateFormatter()
+        df.calendar = Calendar(identifier: .gregorian)
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.timeZone = selectedTimeZone
+        df.dateFormat = "dd.MM. HH:mm"
+        return df.string(from: date)
     }
 }
 

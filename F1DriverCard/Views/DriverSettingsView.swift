@@ -3,11 +3,11 @@ import SwiftUI
 struct DriverSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
+    @AppStorage("selectedTimeZoneID") private var selectedTimeZoneID: String = TimeZone.current.identifier
     @StateObject var driversViewModel = DriversListViewModel()
     @StateObject var raceResultViewModel = RaceResultViewModel()
     @StateObject var constructorsViewModel = ConstructorViewModel()
     @State private var selectedTeam: String = ""
-    @State private var selectedTimeZone: TimeZone = .current
     
     var driverTeamMapping: [String: String] {
         guard let race = raceResultViewModel.race else { return [:] }
@@ -54,10 +54,10 @@ struct DriverSettingsView: View {
                 }
             }
             
-            // Picker to select a timezone
-            Picker("Select Time Zone", selection: $selectedTimeZone) {
+            // Picker to select a timezone (bind to identifier string)
+            Picker("Select Time Zone", selection: $selectedTimeZoneID) {
                 ForEach(TimeZone.knownTimeZoneIdentifiers, id: \.self) { identifier in
-                    Text(identifier).tag(TimeZone(identifier: identifier)!)
+                    Text(identifier).tag(identifier)
                 }
             }
             .pickerStyle(.menu)

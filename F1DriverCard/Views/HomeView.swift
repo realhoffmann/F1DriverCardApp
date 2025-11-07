@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject var viewModel = HomeViewModel()
-    @StateObject var raceResultViewModel = RaceResultViewModel()
-    @StateObject var raceScheduleViewModel = RaceScheduleViewModel()
-    @StateObject var driverStandingsViewModel = DriverStandingsViewModel()
-    @StateObject var qualifyingViewModel = QualifyingViewModel()
+    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var raceResultViewModel: RaceResultViewModel
+    @ObservedObject var raceScheduleViewModel: RaceScheduleViewModel
+    @ObservedObject var driverStandingsViewModel: DriverStandingsViewModel
+    @ObservedObject var qualifyingViewModel: QualifyingViewModel
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
     @AppStorage("selectedTimeZoneID") private var selectedTimeZoneID: String = TimeZone.current.identifier
     @State private var dragOffset: CGFloat = 0
@@ -38,7 +38,11 @@ struct HomeView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            DriverInfoView(viewModel: viewModel, showDriverSettings: $showDriverSettings)
+            DriverInfoView(
+                viewModel: viewModel,
+                raceResultViewModel: raceResultViewModel,
+                showDriverSettings: $showDriverSettings
+            )
             
             RaceDetailsView(
                 raceResultViewModel: raceResultViewModel,
@@ -87,5 +91,11 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(
+        viewModel: HomeViewModel(),
+        raceResultViewModel: RaceResultViewModel(),
+        raceScheduleViewModel: RaceScheduleViewModel(),
+        driverStandingsViewModel: DriverStandingsViewModel(),
+        qualifyingViewModel: QualifyingViewModel()
+    )
 }

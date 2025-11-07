@@ -4,27 +4,13 @@ struct DriverSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
     @AppStorage("selectedTimeZoneID") private var selectedTimeZoneID: String = TimeZone.current.identifier
+    @ObservedObject var raceResultViewModel: RaceResultViewModel
     @StateObject var driversViewModel = DriversListViewModel()
-    @StateObject var raceResultViewModel = RaceResultViewModel()
     @StateObject var constructorsViewModel = ConstructorViewModel()
     @State private var selectedTeam: String = ""
     
-    var driverTeamMapping: [String: String] {
-        guard let race = raceResultViewModel.race else { return [:] }
-        var mapping = [String: String]()
-        for result in race.results {
-            mapping[result.driver.driverId] = result.constructor.name
-        }
-        return mapping
-    }
-    
     var filteredDrivers: [Driver] {
-        driversViewModel.drivers.filter { driver in
-            if let team = driverTeamMapping[driver.driverId] {
-                return team == selectedTeam
-            }
-            return false
-        }
+        driversViewModel.drivers(inTeam: selectedTeam)
     }
     
     var body: some View {
@@ -68,7 +54,8 @@ struct DriverSettingsView: View {
                 await driversViewModel.fetchDrivers()
                 await raceResultViewModel.fetchRaceData()
                 await constructorsViewModel.fetchConstructors()
-                if let team = driverTeamMapping[favoriteDriverId] {
+                await driversViewModel.updateTeamMapping(from: raceResultViewModel.getLastRaceForDriverMapping())
+                if let team = driversViewModel.driverTeamMapping[favoriteDriverId] {
                     selectedTeam = team
                 } else if selectedTeam.isEmpty,
                           let firstConstructor = constructorsViewModel.constructors.first {
@@ -80,5 +67,5 @@ struct DriverSettingsView: View {
 }
 
 #Preview {
-    DriverSettingsView()
+    DriverSettingsView(raceResultViewModel: RaceResultViewModel())
 }

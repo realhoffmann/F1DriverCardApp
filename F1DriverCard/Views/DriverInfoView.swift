@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DriverInfoView: View {
     @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var raceResultViewModel: RaceResultViewModel
     @Binding var showDriverSettings: Bool
     
     var body: some View {
@@ -36,7 +37,7 @@ struct DriverInfoView: View {
                 showDriverSettings = true
             }
             .sheet(isPresented: $showDriverSettings) {
-                DriverSettingsView()
+                DriverSettingsView(raceResultViewModel: raceResultViewModel)
                     .presentationDetents([.large])
             }
             
@@ -53,5 +54,9 @@ struct DriverInfoView: View {
 }
 
 #Preview {
-    DriverInfoView(viewModel: HomeViewModel(), showDriverSettings: .constant(false))
+    DriverInfoView(
+        viewModel: HomeViewModel(),
+        raceResultViewModel: RaceResultViewModel(),
+        showDriverSettings: .constant(false)
+    )
 }

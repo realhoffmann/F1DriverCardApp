@@ -36,6 +36,19 @@ class RaceResultViewModel: ObservableObject {
         }
     }
     
+    func getLastRaceForDriverMapping() async -> Race? {
+        let roundString = String(currentRound - 1)
+        do {
+            let resultResponse: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: APIEndpoints.raceResults(round: roundString))
+            
+            guard let fetchedRace = resultResponse.mrData.raceTable.races.first else { return nil }
+            return fetchedRace
+        } catch {
+            print("Error fetching race data: \(error)")
+            return nil
+        }
+    }
+    
     func fetchNextRace() async {
         currentRound += 1
         await fetchRaceData()

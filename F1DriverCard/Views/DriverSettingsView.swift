@@ -14,19 +14,11 @@ struct DriverSettingsView: View {
     
     var body: some View {
         VStack {
-            // Dropdown to select a team using the constructors list
-            Picker("Select Team", selection: $selectedTeam) {
-                ForEach(constructorsViewModel.constructors, id: \.constructorId) { constructor in
-                    Text(constructor.name).tag(constructor.name)
-                }
-            }
-            .pickerStyle(.menu)
-            .padding()
-            
-            // List the drivers filtered by the selected team
             List(filteredDrivers) { driver in
                 HStack {
                     Text(driver.fullName)
+                        .font(.f1Regular(16))
+                        .foregroundColor(.white)
                     Spacer()
                     if driver.driverId == favoriteDriverId {
                         Image(systemName: "checkmark")
@@ -41,6 +33,16 @@ struct DriverSettingsView: View {
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
             .scrollDisabled(true)
+            
+            Picker("Select Team", selection: $selectedTeam) {
+                ForEach(constructorsViewModel.constructors, id: \.constructorId) { constructor in
+                    Text(constructor.name)
+                        .font(.f1Regular(16))
+                        .foregroundColor(.white)
+                        .tag(constructor.name)
+                }
+            }
+            .pickerStyle(.wheel)
         }
         .onAppear {
             Task {

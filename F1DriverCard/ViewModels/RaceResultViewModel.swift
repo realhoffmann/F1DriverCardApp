@@ -9,7 +9,6 @@ class RaceResultViewModel: ObservableObject {
     func updateFromSchedule(_ schedule: RaceSchedule) {
         self.raceSchedule = schedule
         self.currentRound = Int(schedule.round) ?? 1
-        self.race = nil
         Task { await fetchRaceData() }
     }
     

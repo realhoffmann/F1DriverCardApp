@@ -3,7 +3,6 @@ import SwiftUI
 struct DriverSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
-    @AppStorage("selectedTimeZoneID") private var selectedTimeZoneID: String = TimeZone.current.identifier
     @ObservedObject var raceResultViewModel: RaceResultViewModel
     @StateObject var driversViewModel = DriversListViewModel()
     @StateObject var constructorsViewModel = ConstructorViewModel()
@@ -42,15 +41,6 @@ struct DriverSettingsView: View {
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
             .scrollDisabled(true)
-            
-            // Picker to select a timezone (bind to identifier string)
-            Picker("Select Time Zone", selection: $selectedTimeZoneID) {
-                ForEach(TimeZone.knownTimeZoneIdentifiers, id: \.self) { identifier in
-                    Text(identifier).tag(identifier)
-                }
-            }
-            .pickerStyle(.menu)
-            .padding()
         }
         .onAppear {
             Task {

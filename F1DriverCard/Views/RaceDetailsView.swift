@@ -7,7 +7,7 @@ struct RaceDetailsView: View {
     @ObservedObject var driverStandingsViewModel: DriverStandingsViewModel
     @ObservedObject var viewModel: HomeViewModel
     @Binding var favoriteDriverId: String
-    @Binding var selectedTimeZone: TimeZone
+    let timeZone: TimeZone = .current
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -108,7 +108,7 @@ struct RaceDetailsView: View {
         let df = DateFormatter()
         df.calendar = Calendar(identifier: .gregorian)
         df.locale = Locale(identifier: "en_US_POSIX")
-        df.timeZone = selectedTimeZone
+        df.timeZone = timeZone
         df.dateFormat = "dd.MM. HH:mm"
         return df.string(from: date)
     }
@@ -174,8 +174,7 @@ struct RaceDetailsView: View {
         qualifyingViewModel: qualifyingViewModel,
         driverStandingsViewModel: driverStandingsViewModel,
         viewModel: homeViewModel,
-        favoriteDriverId: .constant("max_verstappen"),
-        selectedTimeZone: .constant(.current)
+        favoriteDriverId: .constant("max_verstappen")
     )
 }
 #Preview {
@@ -201,7 +200,6 @@ struct RaceDetailsView: View {
         qualifyingViewModel: QualifyingViewModel(),
         driverStandingsViewModel: DriverStandingsViewModel(),
         viewModel: HomeViewModel(),
-        favoriteDriverId: .constant("max_verstappen"),
-        selectedTimeZone: .constant(.current)
+        favoriteDriverId: .constant("max_verstappen")
     )
 }

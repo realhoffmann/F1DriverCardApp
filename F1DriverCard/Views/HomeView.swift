@@ -7,21 +7,8 @@ struct HomeView: View {
     @ObservedObject var driverStandingsViewModel: DriverStandingsViewModel
     @ObservedObject var qualifyingViewModel: QualifyingViewModel
     @AppStorage("favoriteDriverId") var favoriteDriverId: String = "max_verstappen"
-    @AppStorage("selectedTimeZoneID") private var selectedTimeZoneID: String = TimeZone.current.identifier
     @State private var dragOffset: CGFloat = 0
     @State private var showDriverSettings: Bool = false
-    
-    private var selectedTimeZone: TimeZone {
-        TimeZone(identifier: selectedTimeZoneID) ?? .current
-    }
-    private var selectedTimeZoneBinding: Binding<TimeZone> {
-        Binding<TimeZone>(
-            get: { selectedTimeZone },
-            set: { newValue in
-                selectedTimeZoneID = newValue.identifier
-            }
-        )
-    }
     
     private func updateRaceData() async {
         let round = String(raceScheduleViewModel.currentRound)
@@ -50,8 +37,7 @@ struct HomeView: View {
                 qualifyingViewModel: qualifyingViewModel,
                 driverStandingsViewModel: driverStandingsViewModel,
                 viewModel: viewModel,
-                favoriteDriverId: $favoriteDriverId,
-                selectedTimeZone: selectedTimeZoneBinding
+                favoriteDriverId: $favoriteDriverId
             )
 
             TrackImageView(

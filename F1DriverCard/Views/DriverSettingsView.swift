@@ -39,6 +39,9 @@ struct DriverSettingsView: View {
                     dismiss()
                 }
             }
+            .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+            .scrollDisabled(true)
             
             // Picker to select a timezone (bind to identifier string)
             Picker("Select Time Zone", selection: $selectedTimeZoneID) {

@@ -38,7 +38,7 @@ struct DriverInfoView: View {
             }
             .sheet(isPresented: $showDriverSettings) {
                 DriverSettingsView(raceResultViewModel: raceResultViewModel)
-                    .presentationDetents([.large])
+                    .presentationDetents([.medium])
             }
             
             HStack {

@@ -64,7 +64,7 @@ class RaceResultViewModel: ObservableObject {
     }
     
     func resultForDriver(_ driverId: String) -> Result? {
-        guard let race = race else {
+        guard let race else {
             print("Race data is not available yet")
             return nil
         }

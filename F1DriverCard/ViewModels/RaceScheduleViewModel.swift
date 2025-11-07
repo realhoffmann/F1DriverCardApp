@@ -83,7 +83,7 @@ class RaceScheduleViewModel: ObservableObject {
     }
     
     private func notifyDependents() {
-        guard let schedule = raceSchedule else { return }
-        raceResultViewModel?.updateFromSchedule(schedule)
+        guard let raceSchedule else { return }
+        raceResultViewModel?.updateFromSchedule(raceSchedule)
     }
 }

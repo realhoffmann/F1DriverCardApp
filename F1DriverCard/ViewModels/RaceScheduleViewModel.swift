@@ -10,7 +10,7 @@ class RaceScheduleViewModel: ObservableObject {
     @Published private(set) var allRaces: [RaceSchedule] = []
     weak var raceResultViewModel: RaceResultViewModel?
     
-    private static let dateFormatter: DateFormatter = {
+    static let dateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd"
         df.timeZone = TimeZone(abbreviation: "UTC")
@@ -18,10 +18,9 @@ class RaceScheduleViewModel: ObservableObject {
     }()
 
     var trackImage: String {
-        if let schedule = raceSchedule {
-            return schedule.Circuit.circuitId.lowercased() + "_track"
-        }
-        return "yas_marina_track"
+        guard let raceSchedule else { return "yas_marina_track" }
+        return raceSchedule.Circuit.circuitId.lowercased() + "_track"
+        
     }
     
     func attach(resultVM: RaceResultViewModel) {

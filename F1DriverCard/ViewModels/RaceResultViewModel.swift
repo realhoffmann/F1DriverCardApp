@@ -36,16 +36,45 @@ class RaceResultViewModel: ObservableObject {
     }
     
     func getLastRaceForDriverMapping() async -> Race? {
-        let roundString = String(currentRound - 1)
         do {
-            let resultResponse: RaceResultResponse = try await F1ApiClient.shared.fetchData(from: APIEndpoints.raceResults(round: roundString))
+            let scheduleResponse: RaceScheduleResponse = try await F1ApiClient.shared.fetchData(
+                from: APIEndpoints.races
+            )
+            let races = scheduleResponse.mrData.raceTable.races
             
-            guard let fetchedRace = resultResponse.mrData.raceTable.races.first else { return nil }
+            let currentRoundStr = findCurrentRace(in: races)
+            let previousRoundStr: String?
+            if let currentRoundStr,
+               let cur = Int(currentRoundStr),
+               cur > 1 {
+                previousRoundStr = String(cur - 1)
+            } else {
+                previousRoundStr = races.last?.round
+            }
+            guard let previousRoundStr else { return nil }
+            
+            let resultResponse: RaceResultResponse = try await F1ApiClient.shared.fetchData(
+                from: APIEndpoints.raceResults(round: previousRoundStr)
+            )
+            guard let fetchedRace = resultResponse.mrData.raceTable.races.first,
+                  !fetchedRace.results.isEmpty else { return nil }
             return fetchedRace
         } catch {
-            print("Error fetching race data: \(error)")
+            print("Error fetching last completed race for mapping: \(error)")
             return nil
         }
+    }
+    
+    private func findCurrentRace(in races: [RaceSchedule]) -> String? {
+        let df = RaceScheduleViewModel.dateFormatter
+        let today = Calendar.current.startOfDay(for: Date())
+        for race in races {
+            guard let raceDate = df.date(from: race.date) else { continue }
+            if Calendar.current.startOfDay(for: raceDate) >= today {
+                return race.round
+            }
+        }
+        return nil
     }
     
     func fetchNextRace() async {
